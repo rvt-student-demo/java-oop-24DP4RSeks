@@ -23,6 +23,8 @@ public class UserInterface {
                 list.print();
             } else if (answer.equals("stop")){
                 break;
+            } else if (answer.equals("last")){
+                list.printLastId();
             }
             
         }
