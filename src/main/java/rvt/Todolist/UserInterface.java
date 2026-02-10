@@ -1,4 +1,4 @@
-package rvt;
+package rvt.Todolist;
 
 import java.util.Scanner;
 

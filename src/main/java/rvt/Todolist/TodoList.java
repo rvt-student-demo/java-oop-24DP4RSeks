@@ -1,4 +1,4 @@
-package rvt;
+package rvt.Todolist;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -24,8 +24,6 @@ public class TodoList {
         if (value == null || value.length() < 3) {
             return false;
         }
-        // RegEx: ^ - sākums, [a-zA-Z0-9 ] - atļautie simboli, * - jebkurš skaits, $ - beigas
-        // Piezīme: Lai atļautu latviešu burtus, izmantojam \p{L}
         return value.matches("^[a-zA-Z0-9āčēģīķļņšūžĀČĒĢĪĶĻŅŠŪŽ ]*$");
     }
     private void loadFromFile(){
