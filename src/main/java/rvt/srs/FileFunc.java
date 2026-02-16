@@ -30,6 +30,13 @@ public class FileFunc {
         return value.matches("^[a-zA-Z0-9āčēģīķļņšūžĀČĒĢĪĶĻŅŠŪŽ ]*$");
     }
     private void loadFromFile() {
+        java.io.File file = new java.io.File(filePath);
+    
+    // Check if the file actually exists on your disk
+    if (!file.exists()) {
+        System.out.println("DEBUG: File does not exist at " + file.getAbsolutePath());
+        return; // Stop here so we don't trigger the catch block
+    }
     try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
         String line;
         while ((line = br.readLine()) != null) {
@@ -87,7 +94,7 @@ public class FileFunc {
     public void edit() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Here are students list:");
-        printIdName();
+        print();
 
         System.out.print("Who you want to change? ID: ");
         int id = Integer.valueOf(scanner.nextLine());
@@ -129,9 +136,31 @@ public class FileFunc {
     }
 
     public void print() {
-        for (int i = 0; i < students.size(); i++) {
-            System.out.println((i + 1) + "." + students.get(i));
-        }
+        String border = "+-----------------+-----------------+--------------------------------+-----------------+-----------------+-----------------+";
+    String format = "| %-15s | %-15s | %-30s | %-15s | %-15s | %-15s |%n";
+
+    // 1. Print Header
+    System.out.println(border);
+    System.out.printf(format, "Name", "Surname", "Email", "Peson-code", "Registration ID", "Time and Date");
+    System.out.println(border);
+
+    // 2. Print Rows
+    for (String studentData : students) {
+        String[] parts = studentData.split(",");
+        
+        // Ensure we have enough parts to avoid ArrayIndexOutOfBounds
+        String name = parts.length > 0 ? parts[0] : "";
+        String surname = parts.length > 1 ? parts[1] : "";
+        String email = parts.length > 2 ? parts[2] : "";
+        String pesonCode = parts.length > 3 ? parts[3] : "";
+        String registration = parts.length > 4 ? parts[4] : "";
+        String timeAndDate = parts.length > 5 ? parts[5] : "";
+
+        System.out.printf(format, name, surname, email, pesonCode, registration, timeAndDate);
+    }
+
+    // 3. Print Bottom Border
+    System.out.println(border);
     }
 
     public void remove(int number) {
@@ -156,4 +185,6 @@ public class FileFunc {
         System.out.println("Error updating file.");
     }
 }
+
+
 }
