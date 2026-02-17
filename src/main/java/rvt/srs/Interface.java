@@ -9,9 +9,12 @@ public class Interface {
         Scanner scanner = new Scanner(System.in);
         while (true){
             String answer;
-            System.out.print("Command: ");
+            System.out.print("Command(enter list to see commands): ");
             answer = scanner.nextLine();
-            if (answer.equals("register")){
+            if (answer.equalsIgnoreCase("list")){
+                System.out.println("Commands:");
+                System.out.println("Register \nRemove \nShow \nEdit \nExit");
+            }else if (answer.equalsIgnoreCase("register")){
                 System.out.print("Name: ");
                 String name = scanner.nextLine();
                 System.out.print("Surname: ");
@@ -21,15 +24,13 @@ public class Interface {
                 System.out.print("Person Code: ");
                 String personCode = scanner.nextLine();
                 list.add(name, surname, email, personCode);
-            } else if (answer.equals("remove")){
-                System.out.print("To remove: ");
-                int number = Integer.valueOf(scanner.nextLine());
-                list.remove(number);
-            } else if (answer.equals("show")){
+            } else if (answer.equalsIgnoreCase("remove")){
+                list.remove();
+            } else if (answer.equalsIgnoreCase("show")){
                 list.print();
-            } else if (answer.equals("exit")){
+            } else if (answer.equalsIgnoreCase("exit")){
                 break;
-            } else if (answer.equals("edit")){
+            } else if (answer.equalsIgnoreCase("edit")){
                 list.edit();
             }
             

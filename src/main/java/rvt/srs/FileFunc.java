@@ -60,16 +60,51 @@ public class FileFunc {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy-HH:mm");
         String timestamp = now.format(formatter);
 
-        String studentData = String.format("%s,%s,%s,%s,%d,%s", 
-                                            name, surname, email, personCode, id, timestamp);
-        this.students.add(studentData);
-        saveTaskToFile(studentData);
+        if (checkForDublication(personCode, email) != true){
+            String studentData = String.format("%s,%s,%s,%s,%d,%s", 
+                                                name, surname, email, personCode, id, timestamp);
+            this.students.add(studentData);
+            saveTaskToFile(studentData);
+            
+            this.nextId = this.students.size() + 1;
+
+            System.out.println("Student added successfully!");
+        } else {
+                System.out.println("Cant register a student!");
+                System.out.println("E-mail or Person code is already taken!");
+        }
         
-        this.nextId = this.students.size() + 1;
+    }
 
-        System.out.println("Student added successfully!");
-}
-
+    private boolean checkForDublication(String personCode, String email) {
+        boolean code = false;
+        boolean emailPers = false;
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                
+                if (values.length > 3) {
+                    if (values[3].trim().equals(personCode)) {
+                        code = true;
+                    }
+                    if(values[2].trim().equals(email)){
+                        emailPers = true;
+                    }
+                    break;
+                }
+                
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (code == true | emailPers == true){
+            return true;
+        } else{
+            return false;
+        }
+        
+    }
     private void saveTaskToFile(String taskLine) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
             bw.write(taskLine);
@@ -78,14 +113,12 @@ public class FileFunc {
             System.out.println("Error writing to file: " + e.getMessage());
         }
     }
-
     public String getStudentName(int index){
         if (index >= 0 && index < students.size()) {
         return students.get(index);
         }
         return "Student not found";
     }
-
     public void printIdName(){
         for (int i = 0; i < students.size(); i++){
             System.out.println((i+1) + ":" + students.get(i));
@@ -112,27 +145,40 @@ public class FileFunc {
 
         System.out.print("Enter new value: ");
         String newValue = scanner.nextLine();
+        
+        if (checkForDublication(newValue, newValue) != true){
+            String currentData = students.get(index);
+            String[] parts = currentData.split(",");
 
-        String currentData = students.get(index);
-        String[] parts = currentData.split(",");
+            switch (choice) {
+                case 1: parts[0] = newValue; break; // Name
+                case 2: parts[1] = newValue; break; // Surname
+                case 3: parts[2] = newValue; break; // Email
+                case 4: parts[3] = newValue; break; // Person-code
+                default: System.out.println("Invalid choice."); return;
+            }
 
-        switch (choice) {
-            case 1: parts[0] = newValue; break; // Name
-            case 2: parts[1] = newValue; break; // Surname
-            case 3: parts[2] = newValue; break; // Email
-            case 4: parts[3] = newValue; break; // Person-code
-            default: System.out.println("Invalid choice."); return;
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy-HH:mm");
+            parts[5] = now.format(formatter);
+
+            String updatedLine = String.join(",", parts);
+            students.set(index, updatedLine);
+
+            rewriteFile();
+            System.out.println("Student updated successfully!");
+        } else{
+            int newChoice = choice;
+            if (newChoice == 3){
+                System.out.println("Can't edit a student!");
+                System.out.println("E-mail is already taken");
+            } else if(newChoice == 4){
+                System.out.println("Can't edit a student!");
+                System.out.println("Person code is already taken");
+            }
+            
         }
-
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy-HH:mm");
-        parts[5] = now.format(formatter);
-
-        String updatedLine = String.join(",", parts);
-        students.set(index, updatedLine);
-
-        rewriteFile();
-        System.out.println("Student updated successfully!");
+        
     }
 
     public void print() {
@@ -163,28 +209,57 @@ public class FileFunc {
     System.out.println(border);
     }
 
-    public void remove(int number) {
+    public void remove() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Here are students list:");
+        print();
+
+        System.out.print("To remove(enter q to exit): ");
+        String input = scanner.nextLine();
+
+        if (input.equals("q")){
+            return;
+        }
+
+        int number = Integer.parseInt(input);
         int indexToRemove = number - 1;
 
         if (indexToRemove >= 0 && indexToRemove < students.size()) {
             students.remove(indexToRemove);
             rewriteFile();
             this.nextId = students.size() + 1;
+            
         } else {
             System.out.println("Invalid task number.");
         }
+        rewriteFile();
     }
 
     private void rewriteFile() {
     try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
-        for (String studentData : students) {
-            bw.write(studentData); // studentData already contains Name,Surname,Email,Code,ID,Time
-            bw.newLine();
+        for (int i = 0; i < students.size(); i++) {
+            String studentData = students.get(i);
+            String[] parts = studentData.split(",");
+
+            // Check if the array has the ID field at index 4
+            if (parts.length > 4) {
+                // Update the ID (index 4) to be the current list position + 1
+                parts[4] = String.valueOf(i + 1);
+                
+                // Reconstruct the CSV line
+                studentData = String.join(",", parts);
+                
+                // Update the internal list as well so it stays in sync
+                students.set(i, studentData);
+            }
+
+                bw.write(studentData);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error updating file: " + e.getMessage());
         }
-    } catch (IOException e) {
-        System.out.println("Error updating file.");
     }
-}
 
 
 }
