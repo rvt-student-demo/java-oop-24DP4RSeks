@@ -3,12 +3,13 @@ package rvt.InterfaceInABox;
 public class CD implements Packable{
     private String artist;
     private String name;
-    private double weight;
+    private double weight = 0.1;
+    private int year;
 
     public CD(String artist, String name, int year){
         this.artist = artist;
         this.name = name;
-        this.weight = weight;
+        this.year = year;
     }
 
     @Override
@@ -18,7 +19,7 @@ public class CD implements Packable{
 
     @Override
     public String toString() {
-        return this.artist + ": " + this.name;
+        return this.artist + ": " + this.name + "(" +this.year + ")";
     }
 
 }

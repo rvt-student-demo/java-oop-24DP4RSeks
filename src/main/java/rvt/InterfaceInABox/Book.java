@@ -2,7 +2,7 @@ package rvt.InterfaceInABox;
 
 public class Book implements Packable {
     private String author;
-    private String name;
+    String name;
     private double weight;
 
     public Book(String author, String name, double weight) {
@@ -10,6 +10,7 @@ public class Book implements Packable {
         this.name = name;
         this.weight = weight;
     }
+
 
     @Override
     public double weight() {
