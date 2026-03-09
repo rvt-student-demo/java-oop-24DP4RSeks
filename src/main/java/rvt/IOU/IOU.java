@@ -24,5 +24,6 @@ public class IOU {
 
         System.out.println(mattsIOU.howMuchDoIOweTo("Arthur"));
         System.out.println(mattsIOU.howMuchDoIOweTo("Michael"));
+        
     }
 }
