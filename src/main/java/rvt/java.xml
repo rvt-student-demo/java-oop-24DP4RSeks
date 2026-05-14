@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rvtkursi>
+    <kursi id="1">
+        <name>Java Programming</name>
+        <description>Iegut pamatprincipus Java</description>
+        <teacher>Mihails Svecovs</teacher>
+        <duration>1</duration>
+        <studentCount>30</studentCount>
+        <limenis>iesācēji</limenis>
+    </kursi>
+    <kursi id="2">
+        <name>Advanced Java Concepts</name>
+        <description>Iegut dziļāk uz advanced Java tēmām un labām praksēm.</description>
+        <teacher>Jane Smith</teacher>
+        <duration>1</duration>
+        <studentCount>25</studentCount>
+        <limenis>vidējs</limenis>
+    </kursi>
+    <kursi id="3">
+        <name>Java for Web Development</name>
+        <description>Ieguti Java izmantošanu web aplikāciju izstrādē.</description>
+        <teacher>Bob Johnson</teacher>
+        <duration>3</duration>
+        <studentCount>20</studentCount>
+        <limenis>profesionāls</limenis>
+    </kursi>
+</rvtkursi>
